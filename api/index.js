@@ -12,8 +12,8 @@ mongoose
   .then(() => console.log("DB connected"))
   .catch((err) => console.log(err));
 
-app.listen(3030, () => {
-  console.log("Server on port 3030");
+app.listen(5000, () => {
+  console.log("Server on port 5000");
 });
 
 app.use(express.json());
