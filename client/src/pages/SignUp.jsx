@@ -30,6 +30,7 @@ const SignUp = () => {
       console.log(data);
       if (data.success === false) {
         setError(data.message);
+        console.log(error);
         setLoading(false);
         return;
       }
