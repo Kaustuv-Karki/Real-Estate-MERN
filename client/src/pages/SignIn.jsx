@@ -10,13 +10,9 @@ import OAuth from "../components/OAuth.jsx";
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [userInput, setUserInput] = useState({
-    email: "",
-    password: "",
-  });
+  const [userInput, setUserInput] = useState({});
 
-  const { loading, error } = useSelector((state) => state.user);
-  console.log(loading, error);
+  const { loading, error } = useSelector((state) => state.use || {});
 
   // const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
@@ -40,6 +36,7 @@ const SignIn = () => {
       dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
+      console.log(error);
       dispatch(signInFailure(error.message));
     }
   };
@@ -72,7 +69,7 @@ const SignIn = () => {
           className="w-full p-3 uppercase bg-green-600 text-white rounded-lg hover:opacity-80 disabled:opacity-50">
           {loading ? "Loading..." : "Sign In"}
         </button>
-        {/* <OAuth /> */}
+        <OAuth />
       </form>
       <div className="flex gap-2 py-2">
         <p>Don&apos;t have a account? </p>

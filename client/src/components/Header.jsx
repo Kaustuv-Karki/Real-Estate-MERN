@@ -2,8 +2,8 @@ import { IoSearch } from "react-icons/io5";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 const Header = () => {
-  const { currentUser } = useSelector((state) => state.user);
-  console.log(currentUser.others);
+  const { currentUser } = useSelector((state) => state.user || {});
+  console.log("This is the current user", currentUser);
   return (
     <header className=" w-screen  py-4 px-2 border">
       <div className=" flex justify-between items-center max-w-[1200px] mx-auto">
@@ -27,7 +27,7 @@ const Header = () => {
           <Link to="/about">
             <div className="hover:underline cursor-pointer">About</div>
           </Link>
-          {currentUser.others ? (
+          {currentUser ? (
             currentUser.others.username
           ) : (
             <Link to="/signin">
