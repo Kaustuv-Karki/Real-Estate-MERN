@@ -69,7 +69,7 @@ const SignIn = () => {
           className="w-full p-3 uppercase bg-green-600 text-white rounded-lg hover:opacity-80 disabled:opacity-50">
           {loading ? "Loading..." : "Sign In"}
         </button>
-        <OAuth />
+        {/* <OAuth /> */}
       </form>
       <div className="flex gap-2 py-2">
         <p>Don&apos;t have a account? </p>
