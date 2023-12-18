@@ -12,7 +12,7 @@ const SignIn = () => {
   const navigate = useNavigate();
   const [userInput, setUserInput] = useState({});
 
-  const { loading, error } = useSelector((state) => state.use || {});
+  const { loading } = useSelector((state) => state.user || {});
 
   // const { loading, error } = useSelector((state) => state.user);
   const dispatch = useDispatch();
