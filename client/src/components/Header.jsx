@@ -20,7 +20,7 @@ const Header = () => {
             placeholder="Search"
           />
         </form>
-        <div className="flex gap-4">
+        <div className="flex gap-6 items-center">
           <Link to="/">
             <div className="hover:underline cursor-pointer">Home</div>
           </Link>
@@ -28,7 +28,17 @@ const Header = () => {
             <div className="hover:underline cursor-pointer">About</div>
           </Link>
           {currentUser ? (
-            currentUser.others.username
+            <Link to="/profile">
+              <div className="flex items-center justify-center gap-2">
+                <img
+                  src={currentUser.others.avatar}
+                  alt=""
+                  className="w-10 h-10 rounded-full"
+                />
+                {/* {currentUser.others.email} */}
+                {currentUser.others.username.slice(0, -8)}
+              </div>
+            </Link>
           ) : (
             <Link to="/signin">
               <div className="hover:underline cursor-pointer">Sign In</div>
