@@ -36,7 +36,7 @@ const Header = () => {
                   className="w-10 h-10 rounded-full"
                 />
                 {/* {currentUser.others.email} */}
-                {currentUser.others.username.slice(0, -8)}
+                {currentUser.others.username}
               </div>
             </Link>
           ) : (
