@@ -34,7 +34,6 @@ const Profile = () => {
           </div>
         </div>
       </form>
-      {console.log(currentUser)}
     </div>
   );
 };
