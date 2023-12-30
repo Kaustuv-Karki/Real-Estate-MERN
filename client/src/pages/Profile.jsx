@@ -7,7 +7,6 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
-import { set } from "mongoose";
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.user || {});
   const imgRef = useRef(null);
