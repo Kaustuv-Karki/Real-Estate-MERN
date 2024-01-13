@@ -26,7 +26,7 @@ export const updateUser = async (req, res, next) => {
       { new: true }
     );
     const { password, ...others } = updateduser._doc;
-    res.status(200).json({ message: "User updated successfully", others });
+    res.status(200).json({ message: "User was updated successfully", others });
   } catch (error) {
     next(error);
   }
