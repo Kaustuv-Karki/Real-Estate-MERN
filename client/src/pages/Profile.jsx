@@ -15,11 +15,13 @@ import {
 import { useDispatch } from "react-redux";
 
 const Profile = () => {
-  const { currentUser } = useSelector((state) => state.user || {});
+  const { currentUser, loading, error } = useSelector(
+    (state) => state.user || {}
+  );
   const imgRef = useRef(null);
   const [file, setFile] = useState(undefined);
   const [filePercent, setfilePercent] = useState(0);
-  const [error, isError] = useState(false);
+  // const [error, isError] = useState(false);
   const [formData, setFormData] = useState({});
   const dispatch = useDispatch();
   console.log(file);
@@ -138,8 +140,10 @@ const Profile = () => {
               setFormData({ ...formData, password: e.target.value });
             }}
           />
-          <button className="bg-green-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all">
-            Update Deatils
+          <button
+            disabled={loading}
+            className="bg-green-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all">
+            {loading ? "Loading... " : " Update Deatils"}
           </button>
           <div className="flex justify-between p-1">
             <span className="text-red-500 cursor-pointer">Delete Account</span>
