@@ -7,6 +7,13 @@ import {
   ref,
   uploadBytesResumable,
 } from "firebase/storage";
+import {
+  updateUserStart,
+  updateUserFailure,
+  updateUserSuccess,
+} from "../redux/user/userSlice";
+import { useDispatch } from "react-redux";
+
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.user || {});
   const imgRef = useRef(null);
@@ -14,6 +21,7 @@ const Profile = () => {
   const [filePercent, setfilePercent] = useState(0);
   const [error, isError] = useState(false);
   const [formData, setFormData] = useState({});
+  const dispatch = useDispatch();
   console.log(file);
   console.log("formData", formData);
   console.log(filePercent);
@@ -47,10 +55,32 @@ const Profile = () => {
     );
   };
 
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      dispatch(updateUserStart());
+      const res = await fetch(`/api/user/update/${currentUser.others._id}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+      const data = res.json();
+      if (data.success === false) {
+        dispatch(updateUserFailure(data.message));
+        return;
+      }
+      dispatch(updateUserSuccess(data.others));
+    } catch (error) {
+      dispatch(updateUserFailure(error.message));
+    }
+  };
+
   return (
     <div>
       <h1 className="text-center text-bold">Profile</h1>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="flex flex-col p-4 justify-center items-center">
           <input
             onChange={(e) => setFile(e.target.files[0])}
@@ -86,16 +116,27 @@ const Profile = () => {
         </div>
         <div className="flex flex-col w-[80%] max-w-[500px] mx-auto gap-4">
           <input
-            value={currentUser.others.username}
+            defaultValue={currentUser.others.username}
             className="outline-none py-2 px-5 rounded-md"
+            placeholder="Username"
+            onChange={(e) =>
+              setFormData({ ...formData, username: e.target.value })
+            }
           />
           <input
-            value={currentUser.others.email}
+            defaultValue={currentUser.others.email}
             className="outline-none py-2 px-5 rounded-md"
+            placeholder="Email"
+            onChange={(e) => {
+              setFormData({ ...formData, email: e.target.value });
+            }}
           />
           <input
             placeholder="Password"
             className="outline-none py-2 px-5 rounded-md"
+            onChange={(e) => {
+              setFormData({ ...formData, password: e.target.value });
+            }}
           />
           <button className="bg-green-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all">
             Update Deatils
