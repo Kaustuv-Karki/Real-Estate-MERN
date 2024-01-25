@@ -19,6 +19,7 @@ import {
   signOutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
+import { Link } from "react-router-dom";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector(
@@ -133,7 +134,7 @@ const Profile = () => {
             onClick={() => imgRef.current.click()}
             src={formData.avatar || currentUser.others.avatar}
             alt=""
-            className="rounded-full h-20 cursor-pointer"
+            className="rounded-full h-20 w-20 cursor-pointer"
           />
           <p>
             {" "}
@@ -183,6 +184,11 @@ const Profile = () => {
             className="bg-green-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all">
             {loading ? "Loading... " : " Update Deatils"}
           </button>
+          <Link
+            to="/createLising"
+            className="bg-blue-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all items-center justify-center flex">
+            Create Listing
+          </Link>
           <div className="flex justify-between p-1">
             <span
               className="text-red-500 cursor-pointer"
