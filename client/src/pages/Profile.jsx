@@ -185,7 +185,7 @@ const Profile = () => {
             {loading ? "Loading... " : " Update Deatils"}
           </button>
           <Link
-            to="/createLising"
+            to="/createListing"
             className="bg-blue-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all items-center justify-center flex">
             Create Listing
           </Link>
