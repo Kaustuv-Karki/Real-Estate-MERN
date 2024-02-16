@@ -1,4 +1,29 @@
+import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import { useState } from "react";
+import { app } from "../firebase";
+
 const CreateListing = () => {
+  const [files, setFiles] = useState([]);
+  console.log(files);
+
+  const handleImageSubmit = (e) => {
+    if (files.length > 0 && files.length <= 6) {
+      const promises = [];
+      for (let i = 0; i < files.length; i++) {
+        promises.push(storeImage(files[i]));
+      }
+    }
+  };
+
+  const storeImage = async (file) => {
+    return new Promise((resolve, reject) => {
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + file.name;
+      const storageRef = ref(storage, fileName);
+      const uploadTask = uploadBytesResumable(storageRef, file);
+    });
+  };
+
   return (
     <main className="p-4 max-w-4xl mx-auto">
       <h1 className="text-3xl font-semibold text-center">Create a Listing</h1>
@@ -110,6 +135,7 @@ const CreateListing = () => {
           </p>
           <div className="flex gap-4 mt-4">
             <input
+              onChange={(e) => setFiles(e.target.files)}
               className="p-3 border border-gray-300 rounded w-full"
               type="file"
               id="images"
@@ -117,7 +143,10 @@ const CreateListing = () => {
               multiple
               required
             />
-            <button className="text-green-700 border border-green-700 py-2 px-4 rounded uppercase hover:shadow-lg disabled:opacity-50">
+            <button
+              type="button"
+              onClick={handleImageSubmit}
+              className="text-green-700 border border-green-700 py-2 px-4 rounded uppercase hover:shadow-lg disabled:opacity-50">
               Upload
             </button>
           </div>
