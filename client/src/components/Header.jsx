@@ -15,7 +15,7 @@ const Header = () => {
         <form className="flex items-center justify-center border py-2 px-2 rounded-md w-[20rem] p-3">
           <IoSearch className="w-10 h-5 text-gray-500" />
           <input
-            className="outline-none w-[90%]  "
+            className="outline-none w-[90%]"
             type="text"
             placeholder="Search"
           />

@@ -1,19 +1,46 @@
-import { getStorage, ref, uploadBytesResumable } from "firebase/storage";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
 import { useState } from "react";
 import { app } from "../firebase";
+import { set } from "mongoose";
 
 const CreateListing = () => {
+  const [formData, setFormData] = useState({
+    imageUrls: [],
+  });
+  const [imageUploadError, setImageUploadError] = useState(false);
   const [files, setFiles] = useState([]);
-  console.log(files);
+  const [uploading, setUploading] = useState(false);
 
   const handleImageSubmit = (e) => {
-    if (files.length > 0 && files.length <= 6) {
+    if (files.length > 0 && files.length + formData.imageUrls.length <= 6) {
       const promises = [];
+      setUploading(true);
       for (let i = 0; i < files.length; i++) {
         promises.push(storeImage(files[i]));
       }
+      Promise.all(promises)
+        .then((urls) => {
+          setFormData({
+            ...formData,
+            imageUrls: formData.imageUrls.concat(urls),
+          });
+          setImageUploadError(false);
+          setUploading(false);
+        })
+        .catch((error) => {
+          setImageUploadError("An error occurred while uploading images");
+          setUploading(false);
+        });
+    } else {
+      setImageUploadError("You can only upload a maximum of 6 images");
     }
   };
+  console.log("FormData", formData);
 
   const storeImage = async (file) => {
     return new Promise((resolve, reject) => {
@@ -21,7 +48,41 @@ const CreateListing = () => {
       const fileName = new Date().getTime() + file.name;
       const storageRef = ref(storage, fileName);
       const uploadTask = uploadBytesResumable(storageRef, file);
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+          console.log("Upload is " + progress + "% done");
+          switch (snapshot.state) {
+            case "paused":
+              console.log("Upload is paused");
+              break;
+            case "running":
+              console.log("Upload is running");
+              break;
+          }
+        },
+        (error) => {
+          reject(error);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            resolve(downloadURL);
+          });
+        }
+      );
     });
+  };
+
+  const deleteImage = (index) => {
+    return () => {
+      const newUrls = formData.imageUrls.filter((_, i) => i !== index);
+      setFormData({
+        ...formData,
+        imageUrls: newUrls,
+      });
+    };
   };
 
   return (
@@ -147,9 +208,33 @@ const CreateListing = () => {
               type="button"
               onClick={handleImageSubmit}
               className="text-green-700 border border-green-700 py-2 px-4 rounded uppercase hover:shadow-lg disabled:opacity-50">
-              Upload
+              {uploading ? "Uploading..." : "Upload"}
             </button>
           </div>
+          {imageUploadError && (
+            <p className="text-red-500 text-center mt-4">{imageUploadError}</p>
+          )}
+          {formData.imageUrls.length > 0 && (
+            <div className=" w-full flex-wrap">
+              {formData.imageUrls.map((url, index) => (
+                <div
+                  key={index}
+                  className="flex justify-between items-center py-4 border-b border-black">
+                  <img
+                    src={url}
+                    alt="listing image"
+                    className="w-20 h-20 object-cover rounded-md"
+                  />
+                  <button
+                    type="button"
+                    onClick={deleteImage(index)}
+                    className="bg-red-500 px-4 py-1 rounded-md text-white  h-8">
+                    Delete
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
           <button className="bg-green-700 text-white py-3 px-6 rounded uppercase hover:shadow-lg mt-6">
             Create Listing
           </button>
