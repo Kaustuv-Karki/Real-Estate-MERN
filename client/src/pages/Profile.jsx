@@ -30,6 +30,7 @@ const Profile = () => {
   const [filePercent, setfilePercent] = useState(0);
   // const [error, isError] = useState(false);
   const [formData, setFormData] = useState({});
+  const [userListings, setUserListings] = useState([]);
   const dispatch = useDispatch();
   console.log(file);
   console.log("formData", formData);
@@ -107,7 +108,7 @@ const Profile = () => {
     try {
       dispatch(signOutStart());
       const res = await fetch("api/auth/signout");
-      const data = res.json();
+      const data = await res.json();
       if (data.success === false) {
         dispatch(signOutFailure(data.message));
         return;
@@ -115,6 +116,23 @@ const Profile = () => {
       dispatch(signOutSuccess(data));
     } catch (error) {
       dispatch(signOutFailure(error.message));
+    }
+  };
+
+  const handleShowListings = async () => {
+    console.log(currentUser.others._id, "show listings clicked");
+    try {
+      const res = await fetch(`/api/user/listings/${currentUser.others._id}`);
+      const data = await res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setUserListings(data);
+      // res.status(200).json(data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -182,7 +200,7 @@ const Profile = () => {
           <button
             disabled={loading}
             className="bg-green-500 py-2 rounded-md text-white uppercase hover:opacity-85 transition-all">
-            {loading ? "Loading... " : " Update Deatils"}
+            {loading ? "Loading... " : " Update Deatails"}
           </button>
           <Link
             to="/createListing"
@@ -203,6 +221,41 @@ const Profile = () => {
           </div>
         </div>
       </form>
+      <div className="w-[90%] max-w-[500px] mx-auto flex flex-col items-center justify-center  mt-6">
+        <button
+          onClick={handleShowListings}
+          className="bg-blue-500 py-2 px-5 text-white  uppercase rounded-md">
+          Show Listings
+        </button>
+        <div className="mt-10 w-full">
+          <h1 className="text-center text-[1.6rem] font-semibold text-gray-600 mb-6">
+            Your Listings
+          </h1>
+          {userListings.length > 0 &&
+            userListings.map((listing) => (
+              <div
+                key={listing._id}
+                className="flex items-center justify-between border-b border-gray-500 pb-4">
+                <Link
+                  to={`/listing/${listing._id}`}
+                  className="flex items-center gap-4">
+                  <img
+                    className="h-[50] w-full object-cover"
+                    src={listing.imageUrls[0]}
+                    alt="listing Image"
+                  />
+                  <h1 className="font-semibold text-gray-800">
+                    {listing.name}
+                  </h1>
+                </Link>
+                <div className="flex flex-col items-center justify-cante gap-2">
+                  <button className="text-blue-500 font-semibold">EDIT</button>
+                  <button className="text-red-500 font-semibold">DELETE</button>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
     </div>
   );
 };
