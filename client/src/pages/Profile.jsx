@@ -20,6 +20,7 @@ import {
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
+import Listing from "../../../api/models/listing.model";
 
 const Profile = () => {
   const { currentUser, loading, error } = useSelector(
@@ -131,6 +132,21 @@ const Profile = () => {
       setUserListings(data);
       // res.status(200).json(data);
       console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleUserListingDelete = async (id) => {
+    try {
+      const res = fetch(`api/listing/delete/${id}`, {
+        method: "DELETE",
+      });
+      const data = res.json();
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
     } catch (error) {
       console.log(error);
     }
@@ -250,7 +266,11 @@ const Profile = () => {
                 </Link>
                 <div className="flex flex-col items-center justify-cante gap-2">
                   <button className="text-blue-500 font-semibold">EDIT</button>
-                  <button className="text-red-500 font-semibold">DELETE</button>
+                  <button
+                    onClick={() => handleUserListingDelete(listing._id)}
+                    className="text-red-500 font-semibold">
+                    DELETE
+                  </button>
                 </div>
               </div>
             ))}
