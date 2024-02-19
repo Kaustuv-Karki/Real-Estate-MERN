@@ -245,9 +245,6 @@ const Profile = () => {
           Show Listings
         </button>
         <div className="mt-10 w-full">
-          <h1 className="text-center text-[1.6rem] font-semibold text-gray-600 mb-6">
-            Your Listings
-          </h1>
           {userListings.length > 0 &&
             userListings.map((listing) => (
               <div
