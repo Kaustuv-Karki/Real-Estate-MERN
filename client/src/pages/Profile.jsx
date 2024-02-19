@@ -147,6 +147,7 @@ const Profile = () => {
         console.log(data.message);
         return;
       }
+      setUserListings(userListings.filter((listing) => listing._id !== id));
     } catch (error) {
       console.log(error);
     }
