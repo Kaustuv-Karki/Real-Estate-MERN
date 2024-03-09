@@ -139,10 +139,10 @@ const Profile = () => {
 
   const handleUserListingDelete = async (id) => {
     try {
-      const res = fetch(`api/listing/delete/${id}`, {
+      const res = await fetch(`api/listing/delete/${id}`, {
         method: "DELETE",
       });
-      const data = res.json();
+      const data = await res.json();
       if (data.success === false) {
         console.log(data.message);
         return;
@@ -254,7 +254,7 @@ const Profile = () => {
                   to={`/listing/${listing._id}`}
                   className="flex items-center gap-4">
                   <img
-                    className="h-[50] w-full object-cover"
+                    className="h-[70px] w-full object-contain"
                     src={listing.imageUrls[0]}
                     alt="listing Image"
                   />
