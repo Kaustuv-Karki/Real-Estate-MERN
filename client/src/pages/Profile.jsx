@@ -19,10 +19,11 @@ import {
   signOutSuccess,
 } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Listing from "../../../api/models/listing.model";
 
 const Profile = () => {
+  const navigate = useNavigate();
   const { currentUser, loading, error } = useSelector(
     (state) => state.user || {}
   );
@@ -263,7 +264,11 @@ const Profile = () => {
                   </h1>
                 </Link>
                 <div className="flex flex-col items-center justify-cante gap-2">
-                  <button className="text-blue-500 font-semibold">EDIT</button>
+                  <button
+                    onClick={() => navigate(`/updateListing/${listing._id}`)}
+                    className="text-blue-500 font-semibold">
+                    EDIT
+                  </button>
                   <button
                     onClick={() => handleUserListingDelete(listing._id)}
                     className="text-red-500 font-semibold">
